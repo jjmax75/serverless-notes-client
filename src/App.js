@@ -1,25 +1,57 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+
+import Routes from "./routes";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isAuthenticated: false
+    };
+  }
+
+  userHasAuthenticated = authenticated => {
+    this.setState({ isAuthenticated: authenticated });
+  };
+
+  handleLogout = event => {
+    this.userHasAuthenticated(false);
+  };
+
   render() {
+    const auth = {
+      isAuthenticated: this.state.isAuthenticated,
+      userHasAuthenticated: this.userHasAuthenticated
+    };
+
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <Link to="/" className="App-link">
+            Home
+          </Link>
+          {this.state.isAuthenticated ? (
+            <span onClick={this.handleLogout} className="App-link">
+              Logout
+            </span>
+          ) : (
+            <>
+              <Link to="/signup" className="App-link">
+                Signup
+              </Link>
+              <Link to="/login" className="App-link">
+                Login
+              </Link>
+            </>
+          )}
         </header>
+        <main>
+          <Routes auth={auth} />
+        </main>
       </div>
     );
   }
